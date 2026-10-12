@@ -1,0 +1,36 @@
+<form class="filter-bar" method="get">
+  <select name="userId">
+    <option value="">All users</option>
+    <% users.forEach(u => { %>
+      <option value="<%= u.UserId %>" <%= String(filters.userId) === String(u.UserId) ? 'selected' : '' %>><%= u.Name %></option>
+    <% }) %>
+  </select>
+  <select name="action">
+    <option value="">All actions</option>
+    <% actions.forEach(a => { %>
+      <option value="<%= a %>" <%= filters.action === a ? 'selected' : '' %>><%= a %></option>
+    <% }) %>
+  </select>
+  <input type="date" name="from" value="<%= filters.from %>" />
+  <input type="date" name="to" value="<%= filters.to %>" />
+  <button class="btn btn-secondary" type="submit">Filter</button>
+</form>
+<article class="card">
+  <table>
+    <thead><tr><th>When</th><th>User</th><th>Action</th><th>Entity</th><th>Record</th><th>IP</th><th>Values</th></tr></thead>
+    <tbody>
+      <% if (!logs.length) { %><tr><td colspan="7" class="muted">No audit entries.</td></tr><% } %>
+      <% logs.forEach(log => { %>
+        <tr>
+          <td><%= log.CreatedDate %></td>
+          <td><%= log.UserName || 'System' %></td>
+          <td><span class="pill pill-slate"><%= log.Action %></span></td>
+          <td><%= log.EntityName %></td>
+          <td><%= log.RecordId == null ? '—' : log.RecordId %></td>
+          <td><%= log.IpAddress || '—' %></td>
+          <td class="clip"><%= log.NewValue || log.OldValue || '' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

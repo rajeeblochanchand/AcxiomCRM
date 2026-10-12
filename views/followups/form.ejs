@@ -1,0 +1,51 @@
+<article class="card form-card">
+  <h3>Schedule follow-up</h3>
+  <form method="post" action="/followups" data-validate="followup">
+    <div class="grid-2">
+      <label>Date
+        <input type="date" name="FollowUpDate" required value="<%= followUp.FollowUpDate || '' %>" />
+        <span class="field-error" data-error-for="FollowUpDate"><%= errors.FollowUpDate || '' %></span>
+      </label>
+      <label>Type
+        <select name="FollowUpType">
+          <% types.forEach(t => { %>
+            <option value="<%= t %>" <%= followUp.FollowUpType === t ? 'selected' : '' %>><%= t %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Customer
+        <select name="CustomerId">
+          <option value="">—</option>
+          <% customers.forEach(c => { %>
+            <option value="<%= c.CustomerId %>" <%= String(followUp.CustomerId) === String(c.CustomerId) ? 'selected' : '' %>><%= c.CustomerName %></option>
+          <% }) %>
+        </select>
+        <span class="field-error" data-error-for="CustomerId"><%= errors.CustomerId || '' %></span>
+      </label>
+      <label>Lead
+        <select name="LeadId">
+          <option value="">—</option>
+          <% leads.forEach(l => { %>
+            <option value="<%= l.LeadId %>" <%= String(followUp.LeadId) === String(l.LeadId) ? 'selected' : '' %>><%= l.LeadName %></option>
+          <% }) %>
+        </select>
+      </label>
+      <% if (currentUser.roleName !== 'Sales Executive') { %>
+        <label>Assigned to
+          <select name="AssignedTo">
+            <% users.forEach(u => { %>
+              <option value="<%= u.UserId %>" <%= String(followUp.AssignedTo) === String(u.UserId) ? 'selected' : '' %>><%= u.Name %></option>
+            <% }) %>
+          </select>
+        </label>
+      <% } %>
+    </div>
+    <label>Remarks
+      <textarea name="Remarks" rows="3"><%= followUp.Remarks || '' %></textarea>
+    </label>
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/followups">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </form>
+</article>

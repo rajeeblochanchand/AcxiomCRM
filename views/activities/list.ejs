@@ -1,0 +1,40 @@
+<div class="page-toolbar">
+  <form class="filter-bar" method="get">
+    <select name="type">
+      <option value="">All types</option>
+      <% types.forEach(t => { %><option value="<%= t %>" <%= filters.type === t ? 'selected' : '' %>><%= t %></option><% }) %>
+    </select>
+    <select name="status">
+      <option value="">All statuses</option>
+      <% statuses.forEach(s => { %><option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+    </select>
+    <button class="btn btn-secondary" type="submit">Filter</button>
+  </form>
+  <a class="btn btn-primary" href="/activities/new">Log activity</a>
+</div>
+<article class="card">
+  <table>
+    <thead><tr><th>Date</th><th>Type</th><th>Subject</th><th>Related</th><th>Status</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      <% if (!activities.length) { %><tr><td colspan="7" class="muted">No activities.</td></tr><% } %>
+      <% activities.forEach(a => { %>
+        <tr>
+          <td><%= String(a.ActivityDate).replace('T', ' ').slice(0, 16) %></td>
+          <td><%= a.ActivityType %></td>
+          <td><%= a.Subject %></td>
+          <td><%= a.CustomerName || a.LeadName || '—' %></td>
+          <td><span class="<%= pillClass(a.Status) %>"><%= a.Status %></span></td>
+          <td><%= a.OwnerName || '—' %></td>
+          <td>
+            <% if (a.Status !== 'Completed') { %>
+              <form method="post" action="/activities/<%= a.ActivityId %>/status">
+                <input type="hidden" name="Status" value="Completed" />
+                <button class="linkish" type="submit">Complete</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

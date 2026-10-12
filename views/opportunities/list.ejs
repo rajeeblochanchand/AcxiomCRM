@@ -1,0 +1,35 @@
+<div class="page-toolbar">
+  <form class="filter-bar" method="get">
+    <input name="q" placeholder="Search opportunities" value="<%= filters.q %>" />
+    <select name="stage">
+      <option value="">All stages</option>
+      <% stages.forEach(s => { %>
+        <option value="<%= s %>" <%= filters.stage === s ? 'selected' : '' %>><%= s %></option>
+      <% }) %>
+    </select>
+    <button class="btn btn-secondary" type="submit">Filter</button>
+  </form>
+  <a class="btn btn-primary" href="/opportunities/new">New opportunity</a>
+</div>
+<article class="card">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Customer</th><th>Amount</th><th>Probability</th><th>Weighted</th><th>Stage</th><th>Close</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% if (!opportunities.length) { %><tr><td colspan="8" class="muted">No opportunities found.</td></tr><% } %>
+      <% opportunities.forEach(o => { %>
+        <tr>
+          <td><a href="/opportunities/<%= o.OpportunityId %>"><%= o.OpportunityName %></a></td>
+          <td><%= o.CustomerName || '—' %></td>
+          <td><%= formatCurrency(o.Amount) %></td>
+          <td><%= o.Probability %>%</td>
+          <td><%= formatCurrency(o.WeightedValue) %></td>
+          <td><span class="<%= pillClass(o.Stage) %>"><%= o.Stage %></span></td>
+          <td><%= formatDate(o.ExpectedCloseDate) %></td>
+          <td><a href="/opportunities/<%= o.OpportunityId %>/edit">Edit</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

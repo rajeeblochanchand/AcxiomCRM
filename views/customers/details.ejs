@@ -1,0 +1,42 @@
+<div class="page-toolbar">
+  <div>
+    <p class="muted"><%= customer.CustomerCode %></p>
+    <h2><%= customer.CustomerName %></h2>
+  </div>
+  <div class="row-actions">
+    <a class="btn btn-secondary" href="/customers/<%= customer.CustomerId %>/edit">Edit</a>
+    <form method="post" action="/customers/<%= customer.CustomerId %>/delete" onsubmit="return confirm('Mark this customer inactive?');">
+      <button class="btn btn-ghost" type="submit">Deactivate</button>
+    </form>
+  </div>
+</div>
+<section class="grid-2">
+  <article class="card">
+    <h3>Profile</h3>
+    <dl class="meta">
+      <div><dt>Email</dt><dd><%= customer.Email %></dd></div>
+      <div><dt>Phone</dt><dd><%= customer.Phone %></dd></div>
+      <div><dt>Company</dt><dd><%= customer.CompanyName || '—' %></dd></div>
+      <div><dt>City / State</dt><dd><%= [customer.City, customer.State].filter(Boolean).join(', ') || '—' %></dd></div>
+      <div><dt>Owner</dt><dd><%= customer.OwnerName || '—' %></dd></div>
+      <div><dt>Status</dt><dd><span class="<%= pillClass(customer.Status) %>"><%= customer.Status %></span></dd></div>
+    </dl>
+    <p class="muted"><%= customer.Address || '' %></p>
+  </article>
+  <article class="card">
+    <h3>Opportunities</h3>
+    <% if (!relatedOpps.length) { %><p class="muted">None yet.</p><% } %>
+    <% relatedOpps.forEach(o => { %>
+      <p><a href="/opportunities/<%= o.OpportunityId %>"><%= o.OpportunityName %></a> · <%= formatCurrency(o.Amount) %> · <span class="<%= pillClass(o.Stage) %>"><%= o.Stage %></span></p>
+    <% }) %>
+  </article>
+</section>
+<article class="card">
+  <h3>Follow-ups</h3>
+  <% if (!relatedFollowUps.length) { %><p class="muted">No follow-ups linked.</p><% } %>
+  <ul class="plain-list">
+    <% relatedFollowUps.forEach(f => { %>
+      <li><%= formatDate(f.FollowUpDate) %> · <%= f.FollowUpType %> · <span class="<%= pillClass(f.Status) %>"><%= f.Status %></span></li>
+    <% }) %>
+  </ul>
+</article>

@@ -1,0 +1,89 @@
+<section class="grid-2">
+  <article class="card">
+    <h3>Pipeline by stage</h3>
+    <table>
+      <thead><tr><th>Stage</th><th>Count</th><th>Amount</th><th>Weighted</th></tr></thead>
+      <tbody>
+        <% pipeline.byStage.forEach(row => { %>
+          <tr>
+            <td><span class="<%= pillClass(row.Stage) %>"><%= row.Stage %></span></td>
+            <td><%= row.Count %></td>
+            <td><%= formatCurrency(row.TotalAmount) %></td>
+            <td><%= formatCurrency(row.WeightedValue) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </article>
+  <article class="card">
+    <h3>Pipeline by owner</h3>
+    <table>
+      <thead><tr><th>Owner</th><th>Count</th><th>Amount</th><th>Weighted</th></tr></thead>
+      <tbody>
+        <% pipeline.byOwner.forEach(row => { %>
+          <tr>
+            <td><%= row.OwnerName || 'Unassigned' %></td>
+            <td><%= row.Count %></td>
+            <td><%= formatCurrency(row.TotalAmount) %></td>
+            <td><%= formatCurrency(row.WeightedValue) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </article>
+</section>
+
+<article class="card">
+  <h3>Lead conversion</h3>
+  <p>Converted <strong><%= conversion.totals.Converted || 0 %></strong> · Lost <strong><%= conversion.totals.Lost || 0 %></strong> · Qualified <strong><%= conversion.totals.Qualified || 0 %></strong> · Total <strong><%= conversion.totals.Total || 0 %></strong></p>
+  <table>
+    <thead><tr><th>Owner</th><th>Converted</th><th>Lost</th><th>Total</th></tr></thead>
+    <tbody>
+      <% conversion.byOwner.forEach(row => { %>
+        <tr>
+          <td><%= row.OwnerName || 'Unassigned' %></td>
+          <td><%= row.Converted %></td>
+          <td><%= row.Lost %></td>
+          <td><%= row.Total %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>
+
+<article class="card">
+  <h3>User activity & audit trail</h3>
+  <form class="filter-bar" method="get">
+    <% if (canSeeTeam) { %>
+      <select name="userId">
+        <option value="">All users</option>
+        <% users.forEach(u => { %>
+          <option value="<%= u.UserId %>" <%= String(activity.filters.userId) === String(u.UserId) ? 'selected' : '' %>><%= u.Name %></option>
+        <% }) %>
+      </select>
+    <% } %>
+    <select name="action">
+      <option value="">All actions</option>
+      <% actions.forEach(a => { %>
+        <option value="<%= a %>" <%= activity.filters.action === a ? 'selected' : '' %>><%= a %></option>
+      <% }) %>
+    </select>
+    <input type="date" name="from" value="<%= activity.filters.from %>" />
+    <input type="date" name="to" value="<%= activity.filters.to %>" />
+    <button class="btn btn-secondary" type="submit">Search</button>
+  </form>
+  <table>
+    <thead><tr><th>When</th><th>User</th><th>Action</th><th>Entity</th><th>Record</th></tr></thead>
+    <tbody>
+      <% activity.logs.forEach(log => { %>
+        <tr>
+          <td><%= log.CreatedDate %></td>
+          <td><%= log.UserName || 'System' %></td>
+          <td><%= log.Action %></td>
+          <td><%= log.EntityName %></td>
+          <td><%= log.RecordId == null ? '—' : log.RecordId %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

@@ -1,0 +1,62 @@
+<section class="grid-2">
+  <article class="card form-card">
+    <h3>Create user</h3>
+    <form method="post" action="/users" data-validate="register">
+      <label>Name
+        <input name="Name" required value="<%= values.Name || '' %>" />
+        <span class="field-error" data-error-for="Name"><%= errors.Name || '' %></span>
+      </label>
+      <label>Email
+        <input type="email" name="Email" required value="<%= values.Email || '' %>" />
+        <span class="field-error" data-error-for="Email"><%= errors.Email || '' %></span>
+      </label>
+      <label>Password
+        <input type="password" name="Password" required />
+        <span class="field-error" data-error-for="Password"><%= errors.Password || '' %></span>
+      </label>
+      <label>Role
+        <select name="RoleId" required>
+          <% roles.forEach(r => { %><option value="<%= r.RoleId %>"><%= r.RoleName %></option><% }) %>
+        </select>
+      </label>
+      <button class="btn btn-primary" type="submit">Create user</button>
+    </form>
+  </article>
+  <article class="card">
+    <h3>Password policy</h3>
+    <p class="muted">Minimum 8 characters with uppercase, lowercase, digit, and a special symbol from <code>!@#$%^&*(),.?":{}|&lt;&gt;</code>.</p>
+    <p class="muted">Five failed logins lock the account for 15 minutes. Use lockout toggle to unlock or lock immediately.</p>
+  </article>
+</section>
+<article class="card">
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Lockout</th><th></th></tr></thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.Name %></td>
+          <td><%= u.Email %></td>
+          <td>
+            <form method="post" action="/users/<%= u.UserId %>/role" class="inline-form">
+              <select name="RoleId" onchange="this.form.submit()">
+                <% roles.forEach(r => { %>
+                  <option value="<%= r.RoleId %>" <%= r.RoleId === u.RoleId ? 'selected' : '' %>><%= r.RoleName %></option>
+                <% }) %>
+              </select>
+            </form>
+          </td>
+          <td><span class="<%= pillClass(u.IsActive ? 'Active' : 'Inactive') %>"><%= u.IsActive ? 'Active' : 'Inactive' %></span></td>
+          <td><%= u.LockoutEnd || '—' %></td>
+          <td class="row-actions">
+            <form method="post" action="/users/<%= u.UserId %>/toggle">
+              <button class="linkish" type="submit"><%= u.IsActive ? 'Deactivate' : 'Activate' %></button>
+            </form>
+            <form method="post" action="/users/<%= u.UserId %>/lockout">
+              <button class="linkish" type="submit">Toggle lockout</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

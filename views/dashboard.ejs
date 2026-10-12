@@ -1,0 +1,76 @@
+<section class="kpi-grid">
+  <article class="card kpi"><p>Total Customers</p><h2><%= kpis.totalCustomers %></h2></article>
+  <article class="card kpi"><p>Total Leads</p><h2><%= kpis.totalLeads %></h2></article>
+  <article class="card kpi"><p>Open Leads</p><h2><%= kpis.openLeads %></h2></article>
+  <article class="card kpi"><p>Total Opportunities</p><h2><%= kpis.totalOpportunities %></h2></article>
+  <article class="card kpi"><p>Open Opportunities</p><h2><%= kpis.openOpportunities %></h2></article>
+  <article class="card kpi"><p>Won</p><h2><%= kpis.wonOpportunities %></h2></article>
+  <article class="card kpi"><p>Lost</p><h2><%= kpis.lostOpportunities %></h2></article>
+  <article class="card kpi"><p>Pipeline Value</p><h2><%= formatCurrency(kpis.pipelineValue) %></h2></article>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Lead status breakdown</h3>
+    <canvas id="leadChart" height="220"></canvas>
+  </article>
+  <article class="card">
+    <h3>Opportunity pipeline by stage</h3>
+    <canvas id="pipelineChart" height="220"></canvas>
+  </article>
+</section>
+
+<article class="card">
+  <div class="card-head">
+    <h3>Upcoming follow-ups</h3>
+    <a class="btn btn-ghost" href="/followups?tab=upcoming">View all</a>
+  </div>
+  <% if (!upcomingFollowUps.length) { %>
+    <p class="muted">No upcoming follow-ups.</p>
+  <% } else { %>
+    <table>
+      <thead><tr><th>Date</th><th>Type</th><th>Related</th><th>Owner</th></tr></thead>
+      <tbody>
+        <% upcomingFollowUps.forEach(item => { %>
+          <tr>
+            <td><%= formatDate(item.FollowUpDate) %></td>
+            <td><span class="<%= pillClass(item.FollowUpType) %>"><%= item.FollowUpType %></span></td>
+            <td><%= item.CustomerName || item.LeadName || '—' %></td>
+            <td><%= item.OwnerName || '—' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</article>
+
+<script>
+  const leadData = <%- JSON.stringify(charts) %>;
+  new Chart(document.getElementById('leadChart'), {
+    type: 'doughnut',
+    data: {
+      labels: leadData.leadLabels,
+      datasets: [{
+        data: leadData.leadCounts,
+        backgroundColor: ['#2563eb', '#38bdf8', '#f59e0b', '#ef4444', '#22c55e']
+      }]
+    },
+    options: { plugins: { legend: { position: 'bottom' } }, cutout: '62%' }
+  });
+  new Chart(document.getElementById('pipelineChart'), {
+    type: 'bar',
+    data: {
+      labels: leadData.stageLabels,
+      datasets: [{
+        label: 'Opportunities',
+        data: leadData.stageCounts,
+        backgroundColor: '#2563eb',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+</script>

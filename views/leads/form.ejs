@@ -1,0 +1,50 @@
+<article class="card form-card">
+  <h3><%= mode === 'create' ? 'Create lead' : 'Edit lead' %></h3>
+  <form method="post" action="<%= mode === 'create' ? '/leads' : '/leads/' + lead.LeadId %>" data-validate="lead">
+    <div class="grid-2">
+      <label>Lead name
+        <input name="LeadName" required value="<%= lead.LeadName || '' %>" />
+        <span class="field-error" data-error-for="LeadName"><%= errors.LeadName || '' %></span>
+      </label>
+      <label>Email
+        <input type="email" name="Email" required value="<%= lead.Email || '' %>" />
+        <span class="field-error" data-error-for="Email"><%= errors.Email || '' %></span>
+      </label>
+      <label>Phone
+        <input name="Phone" required maxlength="10" value="<%= lead.Phone || '' %>" />
+        <span class="field-error" data-error-for="Phone"><%= errors.Phone || '' %></span>
+      </label>
+      <label>Company
+        <input name="CompanyName" value="<%= lead.CompanyName || '' %>" />
+      </label>
+      <label>Source
+        <input name="Source" value="<%= lead.Source || '' %>" />
+      </label>
+      <label>Expected value
+        <input type="number" min="0" step="1" name="ExpectedValue" value="<%= lead.ExpectedValue || 0 %>" />
+        <span class="field-error" data-error-for="ExpectedValue"><%= errors.ExpectedValue || '' %></span>
+      </label>
+      <label>Status
+        <select name="Status">
+          <% statuses.forEach(s => { %>
+            <option value="<%= s %>" <%= lead.Status === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+        <span class="field-error" data-error-for="Status"><%= errors.Status || '' %></span>
+      </label>
+      <% if (currentUser.roleName !== 'Sales Executive') { %>
+        <label>Assigned to
+          <select name="AssignedTo">
+            <% users.forEach(u => { %>
+              <option value="<%= u.UserId %>" <%= String(lead.AssignedTo) === String(u.UserId) ? 'selected' : '' %>><%= u.Name %></option>
+            <% }) %>
+          </select>
+        </label>
+      <% } %>
+    </div>
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/leads">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </form>
+</article>

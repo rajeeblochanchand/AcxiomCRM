@@ -1,0 +1,41 @@
+<div class="page-toolbar">
+  <form class="filter-bar" method="get">
+    <input name="q" placeholder="Search name, email, phone, code" value="<%= filters.q %>" />
+    <input name="city" placeholder="City" value="<%= filters.city %>" />
+    <select name="status">
+      <option value="">All statuses</option>
+      <option value="Active" <%= filters.status === 'Active' ? 'selected' : '' %>>Active</option>
+      <option value="Inactive" <%= filters.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+    </select>
+    <button class="btn btn-secondary" type="submit">Filter</button>
+  </form>
+  <a class="btn btn-primary" href="/customers/new">New customer</a>
+</div>
+<article class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th><th>Name</th><th>Email</th><th>Phone</th><th>Company</th><th>Owner</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!customers.length) { %>
+        <tr><td colspan="8" class="muted">No customers found.</td></tr>
+      <% } %>
+      <% customers.forEach(c => { %>
+        <tr>
+          <td><%= c.CustomerCode %></td>
+          <td><a href="/customers/<%= c.CustomerId %>"><%= c.CustomerName %></a></td>
+          <td><%= c.Email %></td>
+          <td><%= c.Phone %></td>
+          <td><%= c.CompanyName || '—' %></td>
+          <td><%= c.OwnerName || '—' %></td>
+          <td><span class="<%= pillClass(c.Status) %>"><%= c.Status %></span></td>
+          <td class="row-actions">
+            <a href="/customers/<%= c.CustomerId %>/edit">Edit</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

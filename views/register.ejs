@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register · AcxiomCRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="auth-body">
+  <div class="auth-card">
+    <div class="brand auth-brand">
+      <span class="brand-mark">A</span>
+      <div>
+        <strong>AcxiomCRM</strong>
+        <p>Create a sales executive account</p>
+      </div>
+    </div>
+    <form action="/register" method="post" data-validate="register">
+      <label>Full name
+        <input name="Name" value="<%= values.Name || '' %>" required maxlength="100" />
+        <span class="field-error" data-error-for="Name"><%= errors.Name || '' %></span>
+      </label>
+      <label>Email
+        <input type="email" name="Email" value="<%= values.Email || '' %>" required />
+        <span class="field-error" data-error-for="Email"><%= errors.Email || '' %></span>
+      </label>
+      <label>Password
+        <input type="password" name="Password" required />
+        <span class="field-error" data-error-for="Password"><%= errors.Password || '' %></span>
+      </label>
+      <label>Confirm password
+        <input type="password" name="ConfirmPassword" required />
+        <span class="field-error" data-error-for="ConfirmPassword"><%= errors.ConfirmPassword || '' %></span>
+      </label>
+      <button class="btn btn-primary btn-block" type="submit">Create account</button>
+    </form>
+    <p class="muted">Already registered? <a href="/login">Sign in</a></p>
+  </div>
+  <script src="/js/validation.js"></script>
+</body>
+</html>

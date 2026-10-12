@@ -1,0 +1,38 @@
+<div class="page-toolbar">
+  <div>
+    <p class="muted"><%= lead.LeadCode %></p>
+    <h2><%= lead.LeadName %></h2>
+  </div>
+  <div class="row-actions">
+    <a class="btn btn-secondary" href="/leads/<%= lead.LeadId %>/edit">Edit</a>
+    <% if (lead.Status === 'Qualified') { %>
+      <button class="btn btn-primary" type="button" data-open-modal="convert-modal">Convert to customer</button>
+    <% } %>
+  </div>
+</div>
+<article class="card">
+  <dl class="meta">
+    <div><dt>Email</dt><dd><%= lead.Email %></dd></div>
+    <div><dt>Phone</dt><dd><%= lead.Phone %></dd></div>
+    <div><dt>Company</dt><dd><%= lead.CompanyName || '—' %></dd></div>
+    <div><dt>Source</dt><dd><%= lead.Source || '—' %></dd></div>
+    <div><dt>Expected value</dt><dd><%= formatCurrency(lead.ExpectedValue) %></dd></div>
+    <div><dt>Status</dt><dd><span class="<%= pillClass(lead.Status) %>"><%= lead.Status %></span></dd></div>
+    <div><dt>Owner</dt><dd><%= lead.OwnerName || '—' %></dd></div>
+  </dl>
+</article>
+
+<% if (lead.Status === 'Qualified') { %>
+  <div class="modal" id="convert-modal" hidden>
+    <div class="modal-card">
+      <h3>Convert to customer</h3>
+      <p>Create a customer from this qualified lead. Name, email, phone, and company will be copied.</p>
+      <form method="post" action="/leads/<%= lead.LeadId %>/convert">
+        <div class="form-actions">
+          <button class="btn btn-ghost" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit">Convert</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% } %>

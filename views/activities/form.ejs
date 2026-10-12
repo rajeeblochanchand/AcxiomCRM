@@ -1,0 +1,51 @@
+<article class="card form-card">
+  <h3>Log activity</h3>
+  <form method="post" action="/activities" data-validate="activity">
+    <div class="grid-2">
+      <label>Type
+        <select name="ActivityType">
+          <% types.forEach(t => { %><option value="<%= t %>" <%= activity.ActivityType === t ? 'selected' : '' %>><%= t %></option><% }) %>
+        </select>
+      </label>
+      <label>Status
+        <select name="Status">
+          <% statuses.forEach(s => { %><option value="<%= s %>" <%= activity.Status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+        </select>
+      </label>
+      <label>Subject
+        <input name="Subject" required value="<%= activity.Subject || '' %>" />
+        <span class="field-error" data-error-for="Subject"><%= errors.Subject || '' %></span>
+      </label>
+      <label>Date and time
+        <input type="datetime-local" name="ActivityDate" required value="<%= activity.ActivityDate || '' %>" />
+        <span class="field-error" data-error-for="ActivityDate"><%= errors.ActivityDate || '' %></span>
+      </label>
+      <label>Customer
+        <select name="CustomerId">
+          <option value="">—</option>
+          <% customers.forEach(c => { %><option value="<%= c.CustomerId %>"><%= c.CustomerName %></option><% }) %>
+        </select>
+      </label>
+      <label>Lead
+        <select name="LeadId">
+          <option value="">—</option>
+          <% leads.forEach(l => { %><option value="<%= l.LeadId %>"><%= l.LeadName %></option><% }) %>
+        </select>
+      </label>
+      <% if (currentUser.roleName !== 'Sales Executive') { %>
+        <label>Assigned to
+          <select name="AssignedTo">
+            <% users.forEach(u => { %><option value="<%= u.UserId %>"><%= u.Name %></option><% }) %>
+          </select>
+        </label>
+      <% } %>
+    </div>
+    <label>Description
+      <textarea name="Description" rows="4"><%= activity.Description || '' %></textarea>
+    </label>
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/activities">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </form>
+</article>

@@ -1,0 +1,32 @@
+<div class="page-toolbar">
+  <form class="filter-bar" method="get">
+    <input name="q" placeholder="Search leads" value="<%= filters.q %>" />
+    <select name="status">
+      <option value="">All statuses</option>
+      <% statuses.forEach(s => { %>
+        <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option>
+      <% }) %>
+    </select>
+    <button class="btn btn-secondary" type="submit">Filter</button>
+  </form>
+  <a class="btn btn-primary" href="/leads/new">New lead</a>
+</div>
+<article class="card">
+  <table>
+    <thead><tr><th>Code</th><th>Name</th><th>Company</th><th>Status</th><th>Expected</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      <% if (!leads.length) { %><tr><td colspan="7" class="muted">No leads found.</td></tr><% } %>
+      <% leads.forEach(l => { %>
+        <tr>
+          <td><%= l.LeadCode %></td>
+          <td><a href="/leads/<%= l.LeadId %>"><%= l.LeadName %></a></td>
+          <td><%= l.CompanyName || '—' %></td>
+          <td><span class="<%= pillClass(l.Status) %>"><%= l.Status %></span></td>
+          <td><%= formatCurrency(l.ExpectedValue) %></td>
+          <td><%= l.OwnerName || '—' %></td>
+          <td><a href="/leads/<%= l.LeadId %>/edit">Edit</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</article>

@@ -1,0 +1,19 @@
+<div class="page-toolbar">
+  <div>
+    <h2><%= opportunity.OpportunityName %></h2>
+    <p class="muted">Weighted value <%= formatCurrency(opportunity.WeightedValue) %></p>
+  </div>
+  <a class="btn btn-secondary" href="/opportunities/<%= opportunity.OpportunityId %>/edit">Edit</a>
+</div>
+<article class="card">
+  <dl class="meta">
+    <div><dt>Customer</dt><dd><%= opportunity.CustomerName || '—' %></dd></div>
+    <div><dt>Lead</dt><dd><%= opportunity.LeadName || '—' %></dd></div>
+    <div><dt>Amount</dt><dd><%= formatCurrency(opportunity.Amount) %></dd></div>
+    <div><dt>Probability</dt><dd><%= opportunity.Probability %>%</dd></div>
+    <div><dt>Stage</dt><dd><span class="<%= pillClass(opportunity.Stage) %>"><%= opportunity.Stage %></span></dd></div>
+    <div><dt>Status</dt><dd><span class="<%= pillClass(opportunity.Status) %>"><%= opportunity.Status %></span></dd></div>
+    <div><dt>Expected close</dt><dd><%= formatDate(opportunity.ExpectedCloseDate) %></dd></div>
+    <div><dt>Owner</dt><dd><%= opportunity.OwnerName || '—' %></dd></div>
+  </dl>
+</article>

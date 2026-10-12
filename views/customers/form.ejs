@@ -1,0 +1,52 @@
+<article class="card form-card">
+  <h3><%= mode === 'create' ? 'Create customer' : 'Edit customer' %></h3>
+  <form method="post" action="<%= mode === 'create' ? '/customers' : '/customers/' + customer.CustomerId %>" data-validate="customer">
+    <div class="grid-2">
+      <label>Customer name
+        <input name="CustomerName" maxlength="100" required value="<%= customer.CustomerName || '' %>" />
+        <span class="field-error" data-error-for="CustomerName"><%= errors.CustomerName || '' %></span>
+      </label>
+      <label>Email
+        <input type="email" name="Email" required value="<%= customer.Email || '' %>" />
+        <span class="field-error" data-error-for="Email"><%= errors.Email || '' %></span>
+      </label>
+      <label>Phone
+        <input name="Phone" required maxlength="10" value="<%= customer.Phone || '' %>" />
+        <span class="field-error" data-error-for="Phone"><%= errors.Phone || '' %></span>
+      </label>
+      <label>Company
+        <input name="CompanyName" value="<%= customer.CompanyName || '' %>" />
+      </label>
+      <label>City
+        <input name="City" value="<%= customer.City || '' %>" />
+      </label>
+      <label>State
+        <input name="State" value="<%= customer.State || '' %>" />
+      </label>
+    </div>
+    <label>Address
+      <textarea name="Address" rows="3"><%= customer.Address || '' %></textarea>
+    </label>
+    <% if (mode === 'edit') { %>
+      <label>Status
+        <select name="Status">
+          <option value="Active" <%= customer.Status === 'Active' ? 'selected' : '' %>>Active</option>
+          <option value="Inactive" <%= customer.Status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+        </select>
+      </label>
+    <% } %>
+    <% if (currentUser.roleName !== 'Sales Executive') { %>
+      <label>Owner
+        <select name="OwnerId">
+          <% users.forEach(u => { %>
+            <option value="<%= u.UserId %>" <%= String(customer.OwnerId) === String(u.UserId) ? 'selected' : '' %>><%= u.Name %></option>
+          <% }) %>
+        </select>
+      </label>
+    <% } %>
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/customers">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </form>
+</article>

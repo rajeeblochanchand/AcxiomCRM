@@ -1,0 +1,60 @@
+<article class="card form-card">
+  <h3><%= mode === 'create' ? 'Create opportunity' : 'Edit opportunity' %></h3>
+  <form method="post" action="<%= mode === 'create' ? '/opportunities' : '/opportunities/' + opportunity.OpportunityId %>" data-validate="opportunity">
+    <div class="grid-2">
+      <label>Opportunity name
+        <input name="OpportunityName" required value="<%= opportunity.OpportunityName || '' %>" />
+        <span class="field-error" data-error-for="OpportunityName"><%= errors.OpportunityName || '' %></span>
+      </label>
+      <label>Customer
+        <select name="CustomerId">
+          <option value="">—</option>
+          <% customers.forEach(c => { %>
+            <option value="<%= c.CustomerId %>" <%= String(opportunity.CustomerId) === String(c.CustomerId) ? 'selected' : '' %>><%= c.CustomerName %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Lead
+        <select name="LeadId">
+          <option value="">—</option>
+          <% leads.forEach(l => { %>
+            <option value="<%= l.LeadId %>" <%= String(opportunity.LeadId) === String(l.LeadId) ? 'selected' : '' %>><%= l.LeadName %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Amount
+        <input type="number" name="Amount" min="1" step="1" required value="<%= opportunity.Amount || '' %>" />
+        <span class="field-error" data-error-for="Amount"><%= errors.Amount || '' %></span>
+      </label>
+      <label>Stage
+        <select name="Stage" id="stage-select">
+          <% stages.forEach(s => { %>
+            <option value="<%= s %>" <%= opportunity.Stage === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Probability (0-100)
+        <input type="number" name="Probability" id="probability-input" min="0" max="100" step="1" required value="<%= opportunity.Probability || 0 %>" />
+        <span class="field-error" data-error-for="Probability"><%= errors.Probability || '' %></span>
+      </label>
+      <label>Expected close date
+        <input type="date" name="ExpectedCloseDate" required value="<%= opportunity.ExpectedCloseDate ? String(opportunity.ExpectedCloseDate).slice(0,10) : '' %>" />
+        <span class="field-error" data-error-for="ExpectedCloseDate"><%= errors.ExpectedCloseDate || '' %></span>
+      </label>
+      <% if (currentUser.roleName !== 'Sales Executive') { %>
+        <label>Assigned to
+          <select name="AssignedTo">
+            <% users.forEach(u => { %>
+              <option value="<%= u.UserId %>" <%= String(opportunity.AssignedTo) === String(u.UserId) ? 'selected' : '' %>><%= u.Name %></option>
+            <% }) %>
+          </select>
+        </label>
+      <% } %>
+    </div>
+    <p class="muted">Weighted pipeline value = (Amount × Probability) / 100. Preview: <strong id="weighted-preview">—</strong></p>
+    <div class="form-actions">
+      <a class="btn btn-ghost" href="/opportunities">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </form>
+</article>
